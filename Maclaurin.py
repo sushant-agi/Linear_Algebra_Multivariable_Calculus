@@ -1,0 +1,43 @@
+#SUSHANT
+
+#MacLaurin Series for Cos(x)
+
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from matplotlib.widgets import Slider
+x=np.linspace(-7, 7, 2000)
+y=np.cos(x)
+fig, ax=plt.subplots()
+plt.subplots_adjust(bottom=0.20)
+plt.ylim(top=2, bottom=-2)
+ax.grid(True)
+
+#Defining the Maclaurin Polynomial for cos(x)
+def McPoly(x, n):
+    z=x**0
+    plusminus=1
+    for i in range(2 ,n+1, 2):
+         z=z+((-1)**plusminus)*x**i/math.factorial(i)
+         plusminus=plusminus+1
+    return z
+n0=0
+z=McPoly(x, n0)
+
+#The Curve and the Slider
+true_curve,=ax.plot(x, y, label="cos(x)")
+approx_curve,=ax.plot(x, z, label=" Approximate Maclaurin polynomial(degree {n0})", linestyle="--")
+ax_slider=plt.axes([.25, .1, .55, .03])
+slider=Slider(ax_slider, "Degree(n)", 0, 16, valinit=n0, valstep=1)
+
+#Updating the curve as the slider is moved
+def update(val):
+      n=int(slider.val)
+      z=McPoly(x, n)
+      approx_curve.set_ydata(z)
+      approx_curve.set_label("Approximate Maclaurin polynomial(degree {n})")
+      fig.canvas.draw_idle()
+      ax.legend(loc="upper right", fontsize=10)
+slider.on_changed(update)
+
+plt.show()
